@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Manajemen Menu{% endblock %}
+
+{% block content %}
+<h1>Manajemen Menu</h1>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#tambahMenuModal">
+    Tambah Menu
+</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for menu in menus %}
+        <tr>
+            <td>{{ menu.nama }}</td>
+            <td>Rp {{ menu.harga|rupiah }}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editMenuModal"
+                        data-id="{{ menu.id }}"
+                        data-nama="{{ menu.nama }}"
+                        data-harga="{{ menu.harga }}">
+                    Edit
+                </button>
+                <a href="{{ url_for('hapus_menu', menu_id=menu.id) }}" 
+                   class="btn btn-sm btn-danger" 
+                   onclick="return confirm('Yakin ingin menghapus menu?')">
+                    Hapus
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal Tambah Menu -->
+<div class="modal fade" id="tambahMenuModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Menu</label>
+                        <input type="text" class="form-control" name="nama" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Harga</label>
+                        <input type="number" class="form-control" name="harga" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Menu -->
+<div class="modal fade" id="editMenuModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="formEditMenu">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Menu</label>
+                        <input type="text" class="form-control" name="nama" id="editNama" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Harga</label>
+                        <input type="number" class="form-control" name="harga" id="editHarga" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var editModal = document.getElementById('editMenuModal')
+        editModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget
+            var id = button.getAttribute('data-id')
+            var nama = button.getAttribute('data-nama')
+            var harga = button.getAttribute('data-harga')
+
+            var form = document.getElementById('formEditMenu')
+            form.action = `/menu/edit/${id}`
+            
+            document.getElementById('editNama').value = nama
+            document.getElementById('editHarga').value = harga
+        })
+    })
+</script>
+{% endblock %}

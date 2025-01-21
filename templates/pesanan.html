@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Manajemen Pesanan{% endblock %}
+
+{% block content %}
+<h1>Manajemen Pesanan</h1>
+
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#tambahPesananModal">
+    Tambah Pesanan
+</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Waktu</th>
+            <th>Total Harga</th>
+            <th>Detail Pesanan</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in pesanan_details %}
+        <tr>
+            <td>{{ item.pesanan.waktu.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>Rp {{ item.pesanan.total_harga|rupiah }}</td>
+            <td>
+                <ul>
+                    {% for detail in item.details %}
+                    <li>{{ detail.menu.nama }} - {{ detail.jumlah }} x Rp {{ detail.menu.harga|rupiah }} = Rp {{ detail.subtotal|rupiah }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a href="{{ url_for('hapus_pesanan', pesanan_id=item.pesanan.id) }}" 
+                   class="btn btn-sm btn-danger" 
+                   onclick="return confirm('Yakin ingin menghapus pesanan?')">
+                    Hapus
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal Tambah Pesanan -->
+<div class="modal fade" id="tambahPesananModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Pesanan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div id="daftarMenu">
+                        <div class="row mb-3 menu-item">
+                            <div class="col-md-6">
+                                <label class="form-label">Pilih Menu</label>
+                                <select class="form-select" name="menu_id[]" required>
+                                    {% for menu in menus %}
+                                    <option value="{{ menu.id }}">{{ menu.nama }} - Rp {{ menu.harga|rupiah }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Jumlah</label>
+                                <input type="number" class="form-control" name="jumlah[]" value="1" min="1" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger" onclick="hapusMenu(this)">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="tambahMenu()">Tambah Menu</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function tambahMenu() {
+        const daftarMenu = document.getElementById('daftarMenu');
+        const menuItem = document.querySelector('.menu-item').cloneNode(true);
+        
+        // Reset pilihan dan jumlah
+        menuItem.querySelector('select').selectedIndex = 0;
+        menuItem.querySelector('input').value = 1;
+        
+        daftarMenu.appendChild(menuItem);
+    }
+
+    function hapusMenu(button) {
+        const daftarMenu = document.getElementById('daftarMenu');
+        if (daftarMenu.children.length > 1) {
+            button.closest('.menu-item').remove();
+        }
+    }
+</script>
+{% endblock %}

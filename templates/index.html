@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Menu</h5>
+                <p class="card-text display-4">{{ total_menu }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Pesanan Hari Ini</h5>
+                <p class="card-text display-4">{{ total_pesanan_hari_ini }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Penjualan Hari Ini</h5>
+                <p class="card-text display-4">Rp {{ total_penjualan_hari_ini|rupiah }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

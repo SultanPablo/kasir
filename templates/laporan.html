@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Laporan Penjualan{% endblock %}
+
+{% block content %}
+<h1>Laporan Penjualan</h1>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Laporan Harian</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Total Penjualan</th>
+                    <th>Total Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in harian %}
+                <tr>
+                    <td>{{ data.tanggal }}</td>
+                    <td>Rp {{ data.total_penjualan|rupiah }}</td>
+                    <td>{{ data.total_item }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Laporan Bulanan</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bulan</th>
+                    <th>Total Penjualan</th>
+                    <th>Total Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in bulanan %}
+                <tr>
+                    <td>{{ data.bulan }}</td>
+                    <td>Rp {{ data.total_penjualan|rupiah }}</td>
+                    <td>{{ data.total_item }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h2>Laporan Tahunan</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tahun</th>
+                    <th>Total Penjualan</th>
+                    <th>Total Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in tahunan %}
+                <tr>
+                    <td>{{ data.tahun }}</td>
+                    <td>Rp {{ data.total_penjualan|rupiah }}</td>
+                    <td>{{ data.total_item }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
